@@ -53,7 +53,7 @@ describe("Todo Application", () => {
     expect(parsedUpdateResponse.completed).toBe(true);
   });
 
-  /*test("Fetches all todos in the database using /todos endpoint", async () => {
+  test("Fetches all todos in the database using /todos endpoint", async () => {
     await agent.post("/todos").send({
       title: "Buy xbox",
       dueDate: new Date().toISOString(),
@@ -73,5 +73,14 @@ describe("Todo Application", () => {
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
     // FILL IN YOUR CODE HERE
-  });*/
+    const response = await agent.post("/todos").send({
+      title: "Buy milk",
+      dueDate: new Date().toISOString(),
+      completed: false,
+    });
+    const parsedResponse = JSON.parse(response.text);
+    const todoID = parsedResponse.id;
+    // eslint-disable-next-line no-unused-vars
+    const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
+  });
 });
