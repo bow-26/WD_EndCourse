@@ -7,6 +7,7 @@ const path = require("path");
 app.use(bodyParser.json());
 
 app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", async (req, res) => {
   const allTodos = await Todo.getTodos();
@@ -16,8 +17,6 @@ app.get("/", async (req, res) => {
     res.json({ allTodos });
   }
 });
-
-app.use(express.static(path.join(__dirname, "public")));
 
 // eslint-disable-next-line no-unused-vars
 app.get("/todos", async (req, res) => {

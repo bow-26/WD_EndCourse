@@ -80,7 +80,8 @@ describe("Todo Application", () => {
     });
     const parsedResponse = JSON.parse(response.text);
     const todoID = parsedResponse.id;
-    // eslint-disable-next-line no-unused-vars
     const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
+    const bool = Boolean(deleteResponse.text);
+    expect(bool).toBe(true);
   });
 });
