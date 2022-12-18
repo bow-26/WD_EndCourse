@@ -17,12 +17,8 @@ describe("Todo Application", function () {
   });
 
   afterAll(async () => {
-    try {
-      await db.sequelize.close();
-      await server.close();
-    } catch (error) {
-      console.log(error);
-    }
+    await db.sequelize.close();
+    await server.close();
   });
 
   test("Creating a new todo", async () => {
