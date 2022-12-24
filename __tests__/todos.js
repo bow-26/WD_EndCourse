@@ -66,10 +66,9 @@ describe("Tesing Todo Suite", function () {
     expect(parsedUpdateResponse.completed).toBe(true);
   });
 
-  test("Updating a todo uof given Id", async () => {
+  test("Mark todo as incomplete", async () => {
     let res = await agent.get("/");
     let csrfToken = extractCsrfToken(res);
-
     await agent.post("/todos").send({
       title: "Buy Chocolate",
       dueDate: new Date().toISOString(),
@@ -80,22 +79,26 @@ describe("Tesing Todo Suite", function () {
     const groupedTodosResponse = await agent
       .get("/")
       .set("Accept", "application/json");
-    const parsedGroupedTodosResponse = JSON.parse(groupedTodosResponse.text);
-    const dueTodayCount = parsedGroupedTodosResponse.dueToday.length;
-    const latestTodo = parsedGroupedTodosResponse.dueToday[dueTodayCount - 1];
-    const status = latestTodo.completed ? false : true;
 
+    const parsedGroupedResponse = JSON.parse(groupedTodosResponse.text);
+
+    const completedItemsCount = parsedGroupedResponse.completedItems.length;
+
+    const latestTodo =
+      parsedGroupedResponse.completedItems[completedItemsCount - 1];
+    const completedStatus = !latestTodo.completed;
     res = await agent.get("/");
     csrfToken = extractCsrfToken(res);
+
     const markCompleteResponse = await agent
       .put(`/todos/${latestTodo.id}`)
       .send({
-        completed: status,
         _csrf: csrfToken,
+        completed: completedStatus,
       });
 
     const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
-    expect(parsedUpdateResponse.completed).toBe(true);
+    expect(parsedUpdateResponse.completed).toBe(false);
   });
 
   test("Deleting a todo using Id", async () => {
